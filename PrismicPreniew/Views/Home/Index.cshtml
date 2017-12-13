@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<PrismicPreniew.Views.Models.IndexViewModel>
 @{
     ViewBag.Title = "Home Page";
 }
@@ -17,13 +17,16 @@
     <div class="carousel-inner">
         @foreach (var image in Model)
         {
-            <div class="item @(image.Active ? "active" : "")" >
-                <img src="@image.Url" alt="@image.Title" style="width:100%;"/>
+            <div class="item @(image.Active ? "active" : "")">
+                <a href="@image.ExternalLink" target="_blank">
+                    <img src="@image.Url" alt="@image.Title" style="width:100%;" />
+                </a>
                 <div class="carousel-caption">
                     <h3>@image.Title</h3>
                     <p>@image.Description</p>
                 </div>
             </div>
+            
         }
     </div>
 
