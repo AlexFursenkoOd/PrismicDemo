@@ -1,0 +1,10 @@
+﻿@model PrismicPreniew.Views.Models.ContentBlockViewModel
+@{
+    ViewBag.Title = "ContentBlock";
+}
+
+<h2><strong>Title: </strong>@Model.BlockTitle</h2>
+<div>
+    <strong>Content: </strong>
+    <pre>@Html.Raw(Model.Content)</pre>
+</div>
