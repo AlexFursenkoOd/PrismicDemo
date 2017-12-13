@@ -38,7 +38,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            @foreach (var code in Locales.AvailableLocales)
+                            @foreach (var code in Locales.GetAvailableLocales)
                             {
                                 @*Filling in Locales dropDown which will redirect to the same page with a new culture code and id for painting or author in case there is one.*@
                                 <li>@Html.ActionLink(code, @action, @controller, new { culture = code, id = id }, new { rel = "alternate", hreflang = code })</li>
