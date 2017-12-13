@@ -18,4 +18,23 @@ namespace PrismicPreniew
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
+    public static class Locales
+    {
+        public static List<string> AvailableLocales { get; set; } = new List<string>
+        {
+            "en",
+            "ru"
+        };
+        //static Locales()
+        //{
+        //    try
+        //    {
+        //        // Retrieving all locales available for us at our space on Contentful to fill in the dropDown in Shared Layout
+        //        AvailableLocales = Task.Run(() => Api._management.GetLocalesCollection()).Result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //    }
+        //}
+    }
 }
