@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace PrismicPreniew
+namespace PrismicPreview
 {
     public class BundleConfig
     {

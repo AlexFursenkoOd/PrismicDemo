@@ -1,12 +1,14 @@
-﻿using System;
+﻿using prismic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace PrismicPreniew
+namespace PrismicPreview
 {
     public class MvcApplication : System.Web.HttpApplication
     {
@@ -18,23 +20,14 @@ namespace PrismicPreniew
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
-    public static class Locales
+
+    public static class PrismicPreviewApi
     {
-        public static List<string> AvailableLocales { get; set; } = new List<string>
+        private static readonly string _endpoint = "https://preview.prismic.io/api";
+
+        public static async Task<Api> GetApi()
         {
-            "en",
-            "ru"
-        };
-        //static Locales()
-        //{
-        //    try
-        //    {
-        //        // Retrieving all locales available for us at our space on Contentful to fill in the dropDown in Shared Layout
-        //        AvailableLocales = Task.Run(() => Api._management.GetLocalesCollection()).Result;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //    }
-        //}
+            return await Api.Get(_endpoint);
+        }
     }
 }

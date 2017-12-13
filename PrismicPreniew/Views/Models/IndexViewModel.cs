@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace PrismicPreniew.Views.Models
+namespace PrismicPreview.Views.Models
 {
     public class IndexViewModel
     {
