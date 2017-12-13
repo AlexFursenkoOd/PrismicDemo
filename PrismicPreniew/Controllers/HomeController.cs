@@ -74,10 +74,10 @@ namespace PrismicPreniew.Controllers
             return View(imageList);
         }
 
-        public async Task<ActionResult> Contact()
+        public async Task<ActionResult> ContentBlock()
         {
             ViewBag.Message = "Your contact page.";
-            var key = "block1en";
+            var key = "block1ru";
             var contentBlock = cache.Get(key)?.ToObject<ContentBlockViewModel>();
             if (contentBlock == null)
             {
