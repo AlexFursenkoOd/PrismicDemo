@@ -17,35 +17,34 @@ namespace PrismicPreniew.Controllers
             var key = "mycourusel";
             var cache = new DefaultCache();
             var imageList = cache.Get(key)?.ToObject<List<IndexViewModel>>();
-            if (imageList == null)
+            if(imageList == null)
             {
                 var endpoint = "https://preview.prismic.io/api";
                 var api = await Api.Get(endpoint);
-                var document = await api.GetByUID("carousel", "mycouruselru");
+                var document = await api.GetByUID("carousel", "mycourusel");
                 var docs = document.GetGroup("carousel.carouselimages").GroupDocs;
 
                 var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments["carouselimage"]).Id.ToString()).ToList();
-                var result = await (api.GetByIDs(docIds, lang: "RU").Submit());
+                var result = await (api.GetByIDs(docIds).Submit());
 
                 var images = result.Results.Select(r =>
-                {
-                    return new IndexViewModel
                     {
-                        Title = r.GetStructuredText("carouselimage.imagetitle").getTitle()?.Text,
-                        OrdinalNumber = r.GetNumber("carouselimage.ordinalnumber")?.Value,
-                        Description = r.GetStructuredText("carouselimage.imagedescription")?.AsHtml(new Resolver()).Replace("<p>", "").Replace("</p>", ""),
-                        ImageUrl = r.GetImageView("carouselimage.image", "main").Url
-                    };
-                }).ToList();
-
+                        var view = new IndexViewModel();
+                            view.Url = r.GetImageView("carouselimage.image", "main")?.Url;
+                            view.Title = r.GetText("carouselimage.imagetitle");
+                            view.OrdinalNumber = r.GetNumber("carouselimage.ordinalnumber")?.Value ?? 0;
+                            view.Description = r.GetText("carouselimage.imagedescription");
+                            view.ExternalLink = r.GetLink("carouselimage.externallink")?.GetUrl(new Resolver()) ?? "";
+                        return view;
+                    }).ToList();
                 images[0].Active = true;
                 cache.Set(key, 240000, Newtonsoft.Json.Linq.JToken.FromObject(images));
                 imageList = cache.Get(key).ToObject<List<IndexViewModel>>();
             }
 
+
             return View(imageList);
         }
-
         public async Task<ActionResult> About()
         {
             var endpoint = "https://preview.prismic.io/api";
@@ -54,7 +53,7 @@ namespace PrismicPreniew.Controllers
             var docs = document.GetGroup("carousel.carouselimages").GroupDocs;
 
             var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments.Values.First()).Id).ToList();
-            var result = await(api.GetByIDs(docIds).Submit());
+            var result = await (api.GetByIDs(docIds).Submit());
             var images = result.Results.Select(r =>
                 new IndexViewModel
                 {
