@@ -29,7 +29,9 @@ namespace PrismicPreview.Controllers
                 }
                 var docs = document.GetGroup("carousel.carouselimages").GroupDocs;
 
-                var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments.Values.First()).Id).ToList();
+                var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments.Values.FirstOrDefault())?.Id).Where(id => id != null).ToList();
+                if (!docIds.Any())
+                    return View(new List<IndexViewModel>());
                 var result = await (api.GetByIDs(docIds).Submit());
 
                 var images = result.Results.Select(r => r.ToIndexViewModel())
@@ -53,7 +55,9 @@ namespace PrismicPreview.Controllers
                 var document = await api.GetByUID("carousel", key);
                 var docs = document.GetGroup("carousel.carouselimages").GroupDocs;
 
-                var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments.Values.First()).Id).ToList();
+                var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments.Values.FirstOrDefault())?.Id).Where(id => id != null).ToList();
+                if (!docIds.Any())
+                    return View(new List<IndexViewModel>());
                 var result = await (api.GetByIDs(docIds).Submit());
 
                 var images = result.Results.Select(r => r.ToIndexViewModel())
