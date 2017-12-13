@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrismicPreniew.Services.Culture;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,9 +15,16 @@ namespace PrismicPreview
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "DefaultWithCulture",
+                url: "{culture}/{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                constraints: new { culture = new CultureConstraint(defaultCulture: "en", pattern: "[a-z]{2}") }
+                );
+
+            routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                url: "{culture}/{controller}/{action}/{id}",
+                defaults: new { culture = "en", controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

@@ -21,7 +21,23 @@ namespace PrismicPreview
         }
     }
 
-    public static class PrismicPreviewApi
+    public static class Locales
+    {
+        private static readonly List<string> AvailableLocales = new List<string>
+        {
+            "en",
+            "ru"
+        };
+        public static List<string> GetAvailableLocales
+        {
+            get
+            {
+                return AvailableLocales;
+            }
+        }
+    }
+
+        public static class PrismicPreviewApi
     {
         private static readonly string _endpoint = "https://preview.prismic.io/api";
 

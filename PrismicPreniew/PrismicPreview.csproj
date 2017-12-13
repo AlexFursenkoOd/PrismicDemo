@@ -162,6 +162,7 @@
     </Compile>
     <Compile Include="Helpers\PrismicHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Culture\CultureConstraint.cs" />
     <Compile Include="Views\Models\ContentBlockViewModel.cs" />
     <Compile Include="Views\Models\IndexViewModel.cs" />
   </ItemGroup>

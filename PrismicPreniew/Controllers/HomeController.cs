@@ -15,9 +15,9 @@ namespace PrismicPreview.Controllers
     {
         static DefaultCache cache = new DefaultCache();
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string culture = "")
         {
-            var key = "mycourusel";
+            var key = "mycourusel" + "_" + culture;
             var imageList = cache.Get(key)?.ToObject<List<IndexViewModel>>();
             if (imageList == null)
             {
@@ -38,9 +38,9 @@ namespace PrismicPreview.Controllers
 
             return View(imageList);
         }
-        public async Task<ActionResult> About()
+        public async Task<ActionResult> About(string culture = "")
         {
-            var key = "e390bee5-52df-49b6-8aa0-ab5d3c97d1c8";
+            var key = "e390bee5-52df-49b6-8aa0-ab5d3c97d1c8" + "_" + culture;
             var imageList = cache.Get(key)?.ToObject<List<IndexViewModel>>();
             if (imageList == null)
             {
@@ -62,10 +62,10 @@ namespace PrismicPreview.Controllers
             return View(imageList);
         }
 
-        public async Task<ActionResult> ContentBlock()
+        public async Task<ActionResult> ContentBlock(string culture = "")
         {
             ViewBag.Message = "Your contact page.";
-            var key = "block1ru";
+            var key = "block1" + "_" + culture;
             var contentBlock = cache.Get(key)?.ToObject<ContentBlockViewModel>();
             if (contentBlock == null)
             {
