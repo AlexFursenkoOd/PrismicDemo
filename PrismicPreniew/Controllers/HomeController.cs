@@ -23,6 +23,10 @@ namespace PrismicPreview.Controllers
             {
                 var api = await PrismicPreviewApi.GetApi();
                 var document = await api.GetByUID("carousel", key);
+                if(document == null)
+                {
+                    return View();
+                }
                 var docs = document.GetGroup("carousel.carouselimages").GroupDocs;
 
                 var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments.Values.First()).Id).ToList();
