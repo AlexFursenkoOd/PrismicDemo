@@ -25,7 +25,7 @@ namespace PrismicPreniew.Controllers
                 var document = await api.GetByUID("carousel", "mycouruselru");
                 var docs = document.GetGroup("carousel.carouselimages").GroupDocs;
 
-                var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments["carouselimage"]).Id.ToString()).ToList();
+                var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments.Values.First()).Id).ToList();
                 var result = await (api.GetByIDs(docIds).Submit());
 
                 var images = result.Results.Select(r => new IndexViewModel
@@ -34,8 +34,8 @@ namespace PrismicPreniew.Controllers
                              Title = r.GetText("carouselimage.imagetitle"),
                              OrdinalNumber = r.GetNumber("carouselimage.ordinalnumber")?.Value ?? 0,
                              Description = r.GetText("carouselimage.imagedescription"),
-                             ExternalLink = r.GetLink("carouselimage.externallink")?.GetUrl(new Resolver()) ?? ""
-                         }).ToList();
+                             ExternalLink = ((WebLink)r.GetLink("carouselimage.externallink"))?.Url
+                         }).OrderBy(i => i.OrdinalNumber).ToList();
                 images[0].Active = true;
                 cache.Set(key, 240000, Newtonsoft.Json.Linq.JToken.FromObject(images));
                 imageList = cache.Get(key).ToObject<List<IndexViewModel>>();
@@ -46,32 +46,54 @@ namespace PrismicPreniew.Controllers
         }
         public async Task<ActionResult> About()
         {
-            var endpoint = "https://preview.prismic.io/api";
-            var api = await Api.Get(endpoint);
-            var document = await api.GetByUID("carousel", "e390bee5-52df-49b6-8aa0-ab5d3c97d1c8");
-            var docs = document.GetGroup("carousel.carouselimages").GroupDocs;
+            var key = "e390bee5-52df-49b6-8aa0-ab5d3c97d1c8";
+            //cache.Set(key, 1, Newtonsoft.Json.Linq.JToken.FromObject(""));
+            var imageList = cache.Get(key)?.ToObject<List<IndexViewModel>>();
+            if (imageList == null)
+            {
+                var endpoint = "https://preview.prismic.io/api";
+                var api = await Api.Get(endpoint);
+                var document = await api.GetByUID("carousel", key);
+                var docs = document.GetGroup("carousel.carouselimages").GroupDocs;
 
-            var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments.Values.First()).Id).ToList();
-            var result = await (api.GetByIDs(docIds).Submit());
-            var images = result.Results.Select(r =>
-                 new IndexViewModel
-                 {
-                     Url = r.GetImageView("carouselimage.image", "main")?.Url,
-                     Title = r.GetText("carouselimage.imagetitle"),
-                     OrdinalNumber = r.GetNumber("carouselimage.ordinalnumber")?.Value ?? 0,
-                     Description = r.GetText("carouselimage.imagedescription"),
-                     ExternalLink = r.GetLink("carouselimage.externallink")?.GetUrl(new Resolver()) ?? ""
-                 }).ToList();
-            images[0].Active = true;
+                var docIds = docs.Select(doc => ((DocumentLink)doc.Fragments.Values.First()).Id).ToList();
+                var result = await (api.GetByIDs(docIds).Submit());
 
-            return View(images);
+                var images = result.Results.Select(r => new IndexViewModel
+                {
+                    Url = r.GetImageView("carouselimage.image", "main")?.Url,
+                    Title = r.GetText("carouselimage.imagetitle"),
+                    OrdinalNumber = r.GetNumber("carouselimage.ordinalnumber")?.Value ?? 0,
+                    Description = r.GetText("carouselimage.imagedescription"),
+                    ExternalLink = ((WebLink)r.GetLink("carouselimage.externallink"))?.Url
+                }).OrderBy(i => i.OrdinalNumber).ToList();
+                images[0].Active = true;
+                cache.Set(key, 240000, Newtonsoft.Json.Linq.JToken.FromObject(images));
+                imageList = cache.Get(key).ToObject<List<IndexViewModel>>();
+            }
+            return View(imageList);
         }
 
-        public ActionResult Contact()
+        public async Task<ActionResult> Contact()
         {
             ViewBag.Message = "Your contact page.";
+            var key = "block1en";
+            var contentBlock = cache.Get(key)?.ToObject<ContentBlockViewModel>();
+            if (contentBlock == null)
+            {
+                var endpoint = "https://preview.prismic.io/api";
+                var api = await Api.Get(endpoint);
+                var document = await api.GetByUID("contentblock", key);
+                var viewModel = new ContentBlockViewModel
+                {
+                    BlockTitle = document.GetText("contentblock.blocktitle"),
+                    Content = document.GetText("contentblock.content")
+                };
 
-            return View();
+                cache.Set(key, 240000, Newtonsoft.Json.Linq.JToken.FromObject(viewModel));
+                contentBlock = cache.Get(key).ToObject<ContentBlockViewModel>();
+            }
+            return View(contentBlock);
         }
     }
 

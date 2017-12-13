@@ -1,4 +1,5 @@
-﻿@{
+﻿@model PrismicPreniew.Views.Models.ContentBlockViewModel
+@{
     ViewBag.Title = "Contact";
 }
 <h2>@ViewBag.Title.</h2>
@@ -11,6 +12,11 @@
     425.555.0100
 </address>
 
+<h2><strong>Title: </strong>@Model.BlockTitle</h2>
+<div>
+    <strong>Content: </strong>
+    <pre>@Html.Raw(Model.Content)</pre>
+</div>
 <address>
     <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
     <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
